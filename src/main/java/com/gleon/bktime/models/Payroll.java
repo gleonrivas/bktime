@@ -55,7 +55,7 @@ public class Payroll {
     private User userId;
 
     @OneToMany(
-            mappedBy = "payroll_Id",
+            mappedBy = "payrollId",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
