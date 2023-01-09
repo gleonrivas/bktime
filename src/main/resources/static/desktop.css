@@ -1,0 +1,81 @@
+@media (min-device-width: 1201px) {
+    .titleof{
+        width: available;
+        text-align: left;
+        padding-left: 0;
+        margin: 0 auto 2rem auto;
+        font-size: 3rem;
+        font-family: Impact, serif;
+    }
+    .writeIn{
+        font-size: 1.5rem;
+        font-family: Impact, serif;
+        padding: 1rem 2rem;
+        margin: 0.5rem auto;
+    }
+    .btn{
+        font-size: 25px;
+        font-family: Impact, serif;
+        padding: 10px 20px;
+        min-width: 10%;
+        margin: 5% auto 1% auto;
+        border: none;
+        background-color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+    .autoContainer{
+        font-size: 25px;
+        font-family: Impact, serif;
+        padding: 10px 20px;
+        min-width: 10%;
+        margin: 3% auto 1% auto;
+    }
+    .absoluteOk{
+        width: 100%;
+        top: 10%;
+        left: 0;
+        font-size: 2rem;
+        text-align: center;
+        position: absolute;
+        color: #009f48;
+        margin-bottom: 2rem;
+    }
+    .adjustedOk{
+        color: #009f48;
+        text-align: center;
+        font-size: 1.7rem;
+        margin-bottom: 1%;
+    }
+    .absoluteNotOk{
+        width: 100%;
+        top: 9%;
+        left: 0;
+        font-size: 2rem;
+        text-align: center;
+        position: absolute;
+        color: #9f0000;
+        margin-bottom: 2rem;
+    }
+    .link{
+        text-decoration-line: underline;
+        font-size: 21px;
+        color: #cccccc;
+    }
+    .bContainer{
+        width: 35%;
+    }
+    .centerSpaced{
+        min-width: 35%;
+        justify-content: space-between;
+    }
+
+    .isoContainer{
+        display: flex;
+        flex-direction: column;
+        width: available;
+        text-align: left;
+        padding-left: 0;
+    }
+
+}
