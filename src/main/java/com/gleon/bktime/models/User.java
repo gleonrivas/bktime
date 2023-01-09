@@ -75,6 +75,9 @@ public class User {
     public User(Integer id, String description, String firstName, UserType user, String firstName1, String lastName, String phoneNumber, String emailAddress, String description1) {
     }
 
+    public User(User userById) {
+    }
+
     @Override
     public String toString() {
         return "User{" +

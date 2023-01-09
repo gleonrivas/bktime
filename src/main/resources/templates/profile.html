@@ -22,11 +22,11 @@
 <div class="adjustedOk" th:if="${param.profileSuccess}">Se ha realizado la modificacion de datos</div>
 <div class="adjustedOk" th:if="${param.passwordSuccess}">Se ha guardado correctamente la nueva contraseña</div>
 
-<form class="vStack" method="post" th:object="${user}">
-        <input class="writeIn bContainer" required placeholder="Nombre de usuario.*" th:value="${user.username}">
-        <input class="writeIn bContainer" required placeholder="Nombre.*" >
-        <input class="writeIn bContainer" required placeholder="Apellidos.*" >
-        <input class="writeIn bContainer" required placeholder="Email.*" >
+<form class="vStack" method="post" th:action="@{/profile}" th:object="${user}">
+        <input class="writeIn bContainer" required placeholder="Nombre de usuario.*" th:value="${user.userName}">
+        <input class="writeIn bContainer" required placeholder="Nombre.*" th:value="${user.name}">
+        <input class="writeIn bContainer" required placeholder="Apellidos.*" th:value="${user.surname}">
+        <input class="writeIn bContainer" required placeholder="Email.*" th:value="${user.email}">
     <a class=" autoContainer writeIn link " th:href="@{/password}">¿Quieres cambiar la contraseña?</a>
 
     <div class="hStack spceEven centerSpaced">
