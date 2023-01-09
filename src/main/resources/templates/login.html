@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="../static/default.css">
+    <link rel="stylesheet" href="../static/desktop.css">
+    <link rel="stylesheet" href="../static/mobile.css">
+
+    <link rel="stylesheet" href="../default.css">
+    <link rel="stylesheet" href="../desktop.css">
+    <link rel="stylesheet" href="../mobile.css">
+
+</head>
+<body>
+
+
+<form class="fStack" method="post" th:action="@{/login}">
+    <div class="absoluteOk" th:if="${param.success}">Usuario creado correctamente.</div>
+    <div class="absoluteNotOk" th:if="${param.error}">Usuario o contraseña erroneos.</div>
+    <div class="absoluteOk" th:if="${param.logout}">Se cerró la sesión.</div>
+
+    <input class="writeIn bContainer" name="username" type="text" placeholder="Nombre de usuario o email.">
+
+    <input class="writeIn bContainer" name="password" type="password" placeholder="Contraseña.">
+
+    <button class="writeIn autoContainer btn" type="submit" value="Iniciar sesión">Iniciar sesión</button>
+    <a class="hStack link" th:href="@{/singup}">Crea una cuenta aquí.</a>
+    <a class="hStack link" th:href="@{/logout}">Cerrar sesión.</a>
+
+</form>
+
+</body>
+</html>
