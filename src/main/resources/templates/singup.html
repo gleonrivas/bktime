@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Sing Up</title>
+
+    <link rel="stylesheet" href="../static/default.css">
+    <link rel="stylesheet" href="../static/desktop.css">
+    <link rel="stylesheet" href="../static/mobile.css">
+
+    <link rel="stylesheet" href="../default.css">
+    <link rel="stylesheet" href="../desktop.css">
+    <link rel="stylesheet" href="../mobile.css">
+
+</head>
+<body>
+
+
+
+<form class="fStack" method="post" th:action="@{/singup}" th:object="${user}">
+    <div class="absoluteNotOk" th:if="${param.alreadyExistUsername}">Ese nombre de usuario ya existe.</div>
+    <div class="absoluteNotOk" th:if="${param.alreadyExistEmail}">Ese email ya existe.</div>
+
+    <input th:field="*{userName}" class="writeIn bContainer" type="text" required placeholder="Nombre de usuario.*">
+    <input th:field="*{name}" class="writeIn bContainer" type="text" required placeholder="Nombre.*">
+    <input th:field="*{surname}" class="writeIn bContainer" type="text" required placeholder="Apellidos.*">
+    <input th:field="*{email}" class="writeIn bContainer" type="email" required placeholder="Email.*">
+    <input th:field="*{password}" class="writeIn bContainer" type="password" required placeholder="Contraseña.*">
+    <div class="hStack spceEven centerSpaced">
+        <a class="writeIn clear btn" th:href="@{/login}">Volver</a>
+        <button class="writeIn btn" type="submit">Crear usuario</button>
+    </div>
+
+</form>
+
+
+<script>
+
+</script>
+
+</body>
+</html>
