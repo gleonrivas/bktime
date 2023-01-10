@@ -19,14 +19,19 @@
 <div class="hStack titleof" th:if="${param.passwordSuccess}">
     Perfil de usuario
 </div>
-<div class="adjustedOk" th:if="${param.profileSuccess}">Se ha realizado la modificacion de datos</div>
-<div class="adjustedOk" th:if="${param.passwordSuccess}">Se ha guardado correctamente la nueva contraseña</div>
+<div class="adjustedOk" th:if="${param.success}">Se ha realizado la modificacion de datos</div>
+<div class="adjustedOk" th:if="${param.usernameEmpty}">El nombre de usuario no puede estar vacío.</div>
+<div class="adjustedOk" th:if="${param.nameEmpty}">Tu nombre no puede estar vacío.</div>
+<div class="adjustedOk" th:if="${param.surnameEmpty}">Tu apellido no puede estar vacío.</div>
+<div class="adjustedOk" th:if="${param.emailEmpty}">Tu email no puede estar vacío.</div>
+<div class="adjustedOk" th:if="${param.usernameInUse}">Este nombre de usuario ya está en uso.</div>
+<div class="adjustedOk" th:if="${param.emailInUse}">Este email ya está en uso.</div>
 
 <form class="vStack" method="post" th:action="@{/profile}" th:object="${user}">
-        <input class="writeIn bContainer" required placeholder="Nombre de usuario.*" th:value="${user.userName}">
-        <input class="writeIn bContainer" required placeholder="Nombre.*" th:value="${user.name}">
-        <input class="writeIn bContainer" required placeholder="Apellidos.*" th:value="${user.surname}">
-        <input class="writeIn bContainer" required placeholder="Email.*" th:value="${user.email}">
+        <input name="userName" class="writeIn bContainer" required placeholder="Nombre de usuario.*" th:value="${user.userName}">
+        <input name="name" class="writeIn bContainer" required placeholder="Nombre.*" th:value="${user.name}">
+        <input name="surname" class="writeIn bContainer" required placeholder="Apellidos.*" th:value="${user.surname}">
+        <input name="email" class="writeIn bContainer" required placeholder="Email.*" th:value="${user.email}">
     <a class=" autoContainer writeIn link " th:href="@{/password}">¿Quieres cambiar la contraseña?</a>
     <a class="hStack link" th:href="@{/logout}">Cerrar sesión.</a>
 
