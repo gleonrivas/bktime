@@ -28,6 +28,7 @@
         <input class="writeIn bContainer" required placeholder="Apellidos.*" th:value="${user.surname}">
         <input class="writeIn bContainer" required placeholder="Email.*" th:value="${user.email}">
     <a class=" autoContainer writeIn link " th:href="@{/password}">¿Quieres cambiar la contraseña?</a>
+    <a class="hStack link" th:href="@{/logout}">Cerrar sesión.</a>
 
     <div class="hStack spceEven centerSpaced">
         <a class="writeIn clear btn" th:href="@{/login}">Volver</a>
