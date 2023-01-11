@@ -19,14 +19,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select user_name from user where user_name like :userName", nativeQuery = true)
     String findUserName(String userName);
 
+    @Query(value = "select email from user where email like :email", nativeQuery = true)
+    String findEmail(String email);
+
     @Query(value = "select * from user where user_name like :userName", nativeQuery = true)
     User findByUserName(String userName);
 
     @Query(value = "select * from user", nativeQuery = true)
     List<User> showUsers();
-
-    @Query(value = "select email from user where email like :email", nativeQuery = true)
-    String findEmail(String email);
 
     @Query(value = "select * from user where email like :email", nativeQuery = true)
     User findUserByEmail(String email);
