@@ -6,13 +6,14 @@ import com.gleon.bktime.security.SecurityConfig;
 import com.gleon.bktime.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProfileController {
@@ -26,6 +27,11 @@ public class ProfileController {
     @Autowired
     private SecurityConfig securityConfig;
 
+    @Autowired
+    private HttpSession session;
+
+
+    private User onchangeUser;
 
 
     @GetMapping("/profile")
@@ -39,81 +45,73 @@ public class ProfileController {
 
     @PostMapping("/profile")
     public String modifyUser(
-            //@RequestParam(required = false) String userImg,
-            @RequestParam(required = false) String userName,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String surname,
-            //@RequestParam(required = false) String phone,
-            @RequestParam(required = false) String email) {
+            //@ModelAttribute("") String userImg,
+            @ModelAttribute("userName") String userName,
+            @ModelAttribute("name") String name,
+            @ModelAttribute("surname") String surname,
+            //@ModelAttribute("") String phone,
+            @ModelAttribute("email") String email) {
 
         Integer userId = userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
-        User user = userRepository.findUserById(userId);
+        onchangeUser = userRepository.findUserById(userId);
 
         if (userRepository.findUserName(userName) != null && userRepository.findUserById(userId).getUserName().equals(userName)){
-            user.setUserName(userRepository.findUserById(userId).getUserName());
+            onchangeUser.setUserName(userRepository.findUserById(userId).getUserName());
         } else if (userRepository.findUserName(userName) == null){
-            user.setUserName(userName);
+            onchangeUser.setUserName(userName);
         } else if (userName == null || userName.equals("")) {
             return "redirect:/profile?usernameEmpty";
         }
 
         if (name == null || name.equals("")) {
             return "redirect:/profile?nameEmpty";
-        }
-        if (surname == null || surname.equals("")) {
-            return "redirect:/profile?surnameEmpty";
+        } else {
+            onchangeUser.setName(name);
         }
 
+        if (surname == null || surname.equals("")) {
+            return "redirect:/profile?surnameEmpty";
+        } else {
+        onchangeUser.setSurname(surname);
+        }
+/*
         if (userRepository.findEmail(email) != null && userRepository.findUserById(userId).getEmail().equals(email)){
-            user.setEmail(userRepository.findUserById(userId).getEmail());
+            onchangeUser.setEmail(userRepository.findUserById(userId).getEmail());
         } else if (userRepository.findEmail(email) == null){
-            user.setEmail(email);
+            onchangeUser.setEmail(email);
         } else if (email == null || email.equals("")) {
             return "redirect:/profile?emailEmpty";
         }
-
-        //if (userImg != null) user.setUserImg(userImg);
-
-        /*if (userName == null || userName.equals("")) {
-            return "redirect:/profile?usernameEmpty";
-
-        } else if (userRepository.findUserName(userName) != null) {
-            user.setUserName(userName);
-
-        } else {
-            return "redirect:/profile?usernameInUse";
-        }
-
-        if (name == null || name.equals("")) {
-            return "redirect:/profile?nameEmpty";
-        } else {
-            user.setName(name);
-        }
-
-        if (surname == null || surname.equals("")) {
-            return "redirect:/profile?surnameEmpty";
-        } else {
-            user.setSurname(surname);
-        }
-
-
-        //user.setPhone(phone);
+*/
 
 
         if (email == null || email.equals("")) {
             return "redirect:/profile?emailEmpty";
+        } else if (userRepository.findEmail(email) != null && userRepository.findUserById(userId).getEmail().equals(email)) {
+            return "redirect:/profile?emailExist";
+        }else {
+            onchangeUser.setEmail(email);
+        }
 
-        } else if (userRepository.findEmail(email) != null) {
-            return "redirect:/profile?emailInUse";
 
-        } else if (userRepository.findEmail(email).equals(user.getEmail())) {
-            user.setEmail(email);
+        session.setAttribute("onchangeUser", onchangeUser);
 
-        } else {
-            user.setEmail(email);
+        return "/verifyPassword.html";
+    }
 
-        }*/
-        userService.saveUser(user);
+
+
+    @PostMapping("/passwordVerification")
+    public String verifyPage(@ModelAttribute("verifyPassword") String verifyPassword){
+
+        if (verifyPassword == null || verifyPassword.equals("")){
+            return "redirect:/verifyPassword?error";
+        } else if (securityConfig.passwordEncoder().matches(verifyPassword, userRepository.findUserById(onchangeUser.getId()).getPassword())){
+            userService.saveUserWithEncode(onchangeUser, false);
+        }else{
+            return "redirect:/verifyPassword?mismatch";
+        }
+
         return "redirect:/profile?success";
     }
 
@@ -124,8 +122,8 @@ public class ProfileController {
 
     @PostMapping("/password")
     public String changePasswordRequest(
-            @RequestParam(required = false) String oldPassword,
-            @RequestParam(required = false) String newPassword){
+            @ModelAttribute("oldPassword") String oldPassword,
+            @ModelAttribute("newPassword") String newPassword){
 
         Integer userId = userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
         User toSaveUser = userRepository.findUserById(userId);
@@ -135,7 +133,7 @@ public class ProfileController {
 
             toSaveUser.setPassword(newPassword);
 
-            userService.saveUser(toSaveUser);
+            userService.saveUserWithEncode(toSaveUser, true);
 
             return "redirect:/password?success";
         } else {

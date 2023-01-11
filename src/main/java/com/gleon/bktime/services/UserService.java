@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public User saveUser(User user){
+    public void saveUserWithEncode(User user, boolean encodeTrue){
 
         User newUser = new User();
 
@@ -35,7 +35,13 @@ public class UserService implements UserDetailsService {
             newUser.setSurname(user.getSurname());
             newUser.setPhone(user.getPhone());
             newUser.setEmail(user.getEmail());
-            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            if (encodeTrue) {
+                newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            } else {
+                newUser.setPassword(user.getPassword());
+            }
+
 
             if (user.getId() != null) newUser.setId(user.getId());
 
@@ -57,7 +63,7 @@ public class UserService implements UserDetailsService {
             System.out.println(e);
         }
 
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
     }
 
     @Override

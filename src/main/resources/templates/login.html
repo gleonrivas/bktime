@@ -18,7 +18,7 @@
 
 <form class="fStack" method="post" th:action="@{/login}">
     <div class="absoluteOk" th:if="${param.success}">Usuario creado correctamente.</div>
-    <div class="absoluteNotOk" th:if="${param.error}">Usuario o contraseña erroneos.</div>
+    <div class="absoluteNotOk" th:if="${param.error}">Usuario o contraseña erróneos.</div>
     <div class="absoluteOk" th:if="${param.logout}">Se cerró la sesión.</div>
 
     <input class="writeIn bContainer" name="username" type="text" placeholder="Nombre de usuario o email.">

@@ -42,7 +42,7 @@ public class SingupController {
         } else if(existEmail){
             return "redirect:/singup?alreadyExistEmail";
         }else {
-            userService.saveUser(user);
+            userService.saveUserWithEncode(user, true);
             return "redirect:/login?success";
         }
 
