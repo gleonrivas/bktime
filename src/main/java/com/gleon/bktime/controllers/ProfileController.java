@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,14 +29,18 @@ public class ProfileController {
     @Autowired
     private HttpSession session;
 
+    private User toChangeUser;
 
-    private User onchangeUser;
-
+    public void saveUserIdOnSesion(){
+        try {
+            session.setAttribute("userId", userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
+        }catch (Exception ignored){}
+    }
 
     @GetMapping("/profile")
-    public String requestProfilePage(Model model){
-        Integer userId = userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
-        User user = userRepository.findUserById(userId);
+    public String requestProfilePage(Model model, HttpSession session){
+        saveUserIdOnSesion();
+        User user = userRepository.findUserById((Integer) session.getAttribute("userId"));
         model.addAttribute("user", user);
         return "/profile.html";
     }
@@ -52,13 +55,13 @@ public class ProfileController {
             //@ModelAttribute("") String phone,
             @ModelAttribute("email") String email) {
 
-        Integer userId = userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
-        onchangeUser = userRepository.findUserById(userId);
+        User user = userRepository.findUserById((Integer) session.getAttribute("userId"));
+        toChangeUser = userRepository.findUserById(user.getId());
 
-        if (userRepository.findUserName(userName) != null && userRepository.findUserById(userId).getUserName().equals(userName)){
-            onchangeUser.setUserName(userRepository.findUserById(userId).getUserName());
+        if (userRepository.findUserName(userName) != null && userRepository.findUserById(user.getId()).getUserName().equals(userName)){
+            toChangeUser.setUserName(userRepository.findUserById(user.getId()).getUserName());
         } else if (userRepository.findUserName(userName) == null){
-            onchangeUser.setUserName(userName);
+            toChangeUser.setUserName(userName);
         } else if (userName == null || userName.equals("")) {
             return "redirect:/profile?usernameEmpty";
         }
@@ -66,35 +69,27 @@ public class ProfileController {
         if (name == null || name.equals("")) {
             return "redirect:/profile?nameEmpty";
         } else {
-            onchangeUser.setName(name);
+            toChangeUser.setName(name);
         }
 
         if (surname == null || surname.equals("")) {
             return "redirect:/profile?surnameEmpty";
         } else {
-        onchangeUser.setSurname(surname);
+            toChangeUser.setSurname(surname);
         }
-/*
-        if (userRepository.findEmail(email) != null && userRepository.findUserById(userId).getEmail().equals(email)){
-            onchangeUser.setEmail(userRepository.findUserById(userId).getEmail());
+
+
+        if (userRepository.findEmail(email) != null && userRepository.findUserById(user.getId()).getEmail().equals(email)){
+            toChangeUser.setEmail(userRepository.findUserById(user.getId()).getEmail());
         } else if (userRepository.findEmail(email) == null){
-            onchangeUser.setEmail(email);
+            toChangeUser.setEmail(email);
         } else if (email == null || email.equals("")) {
             return "redirect:/profile?emailEmpty";
         }
-*/
 
 
-        if (email == null || email.equals("")) {
-            return "redirect:/profile?emailEmpty";
-        } else if (userRepository.findEmail(email) != null && userRepository.findUserById(userId).getEmail().equals(email)) {
-            return "redirect:/profile?emailExist";
-        }else {
-            onchangeUser.setEmail(email);
-        }
 
-
-        session.setAttribute("onchangeUser", onchangeUser);
+        session.setAttribute("onchangeUser", toChangeUser);
 
         return "/verifyPassword.html";
     }
@@ -106,8 +101,8 @@ public class ProfileController {
 
         if (verifyPassword == null || verifyPassword.equals("")){
             return "redirect:/verifyPassword?error";
-        } else if (securityConfig.passwordEncoder().matches(verifyPassword, userRepository.findUserById(onchangeUser.getId()).getPassword())){
-            userService.saveUserWithEncode(onchangeUser, false);
+        } else if (securityConfig.passwordEncoder().matches(verifyPassword, userRepository.findUserById((Integer) session.getAttribute("userId")).getPassword())){
+            userService.saveUserWithEncode(toChangeUser, false);
         }else{
             return "redirect:/verifyPassword?mismatch";
         }
@@ -125,11 +120,11 @@ public class ProfileController {
             @ModelAttribute("oldPassword") String oldPassword,
             @ModelAttribute("newPassword") String newPassword){
 
-        Integer userId = userRepository.verifyUsernameOrEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
-        User toSaveUser = userRepository.findUserById(userId);
+        User user = userRepository.findUserById((Integer) session.getAttribute("userId"));
+        User toSaveUser = userRepository.findUserById(user.getId());
 
 
-        if (securityConfig.passwordEncoder().matches(oldPassword, userRepository.findUserById(userId).getPassword()) && newPassword != null){
+        if (securityConfig.passwordEncoder().matches(oldPassword, userRepository.findUserById(user.getId()).getPassword()) && newPassword != null){
 
             toSaveUser.setPassword(newPassword);
 
